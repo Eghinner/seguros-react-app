@@ -1,8 +1,10 @@
 import React, {useState} from 'react'
 import PropTypes from 'prop-types'
 import styled from '@emotion/styled';
+import {optenerDiferenciaYear, calcularMarca, obtenerPlan} from '../helper.js'
 
-const Compo = styled.div`
+
+const Campo = styled.div`
 	display: flex;
 	margin-bottom: 1rem;
 	align-items: center;
@@ -25,7 +27,7 @@ const InputRadio = styled.input`
 `;
 
 const Boton = styled.button`
-	background-color: #00838F;
+	background-color: #15ab92;
 	font-size: 1rem;
 	width: 100%;
 	padding: 1rem;
@@ -39,7 +41,7 @@ const Boton = styled.button`
 
 	&:hover {
 		cursor: pointer;
-		background-color: #26C6DA;
+		background-color: #9ddbc9;
 	}
 `;
 
@@ -52,8 +54,8 @@ const Error = styled.div`
 	margin-bottom: 2rem;
 `;
 
-// Component Start
-const Formulario = props => {
+// Camponent Start
+const Formulario = ({guardarResumen, guardarCargando}) => {
 
 	const [datos, guardarDatos] = useState({
 		marca: '',
@@ -85,18 +87,37 @@ const Formulario = props => {
 			return;
 		} else setError(false);
 
+		// base de 2000
+		let resultado = 2000;
+
 		// Obtener diferencia year
+		const diferencia = optenerDiferenciaYear(year);
 
 		// Restar 3% por year
+		resultado -= ((diferencia*3)*resultado)/100;
 
 		// Americano 15%
 		// Asiatico 5%
 		// Europeo 30%
+		resultado = calcularMarca(marca) * resultado;
 
 		// Basico amuenta 20%
 		// Completo aumento 50%
+		const incrementoPlan = obtenerPlan(plan);
+		resultado = parseFloat(incrementoPlan * resultado).toFixed(2);
 
-		// Total
+		// Spinner
+		guardarCargando(true);
+
+		setTimeout(()=>{
+			guardarCargando(false);
+			// Total
+			guardarResumen({
+				cotizacion: Number(resultado),
+				datos
+			});
+		}, 3000)
+
 
 	}
 
@@ -107,7 +128,7 @@ const Formulario = props => {
 			>
 
 			{error ? <Error>Todos los campos son obligatorios</Error> : null}
-				<Compo>
+				<Campo>
 					<Label>Marca</Label>
 					<Select
 						name="marca"
@@ -119,9 +140,9 @@ const Formulario = props => {
 						<option value="europeo">Europeo</option>
 						<option value="asiatico">Asiatico</option>
 					</Select>
-				</Compo>
+				</Campo>
 
-				<Compo>
+				<Campo>
 					<Label>Año</Label>
 					<Select
 						name="year"
@@ -129,6 +150,8 @@ const Formulario = props => {
 						onChange={obtenerInformacion}
 					>
 						<option value="">-- Seleccione --</option>
+						<option value="2023">2023</option>
+						<option value="2022">2022</option>
 						<option value="2021">2021</option>
 						<option value="2020">2020</option>
 						<option value="2019">2019</option>
@@ -140,9 +163,9 @@ const Formulario = props => {
 						<option value="2013">2013</option>
 						<option value="2012">2012</option>
 					</Select>
-				</Compo>
+				</Campo>
 
-				<Compo>
+				<Campo>
 					<Label>Plan</Label>
 					<InputRadio
 						type="radio"
@@ -158,7 +181,7 @@ const Formulario = props => {
 						checked={plan === 'completo'}
 						onChange={obtenerInformacion}
 					/> Completo
-				</Compo>
+				</Campo>
 
 				<Boton
 					type="submit"
@@ -171,7 +194,8 @@ const Formulario = props => {
 }
 
 Formulario.propTypes = {
-
+	guardarResumen: PropTypes.func.isRequired,
+	guardarCargando: PropTypes.func.isRequired,
 }
 
 export default Formulario

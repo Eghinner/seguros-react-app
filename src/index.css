@@ -4,15 +4,25 @@ html {
   /*box-sizing: border-box;*/
 }
 body {
-  background: #e96443;  /* fallback for old browsers */
-  background: -webkit-linear-gradient(to right, #904e95, #e96443);  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to right, #904e95, #e96443);
+  background: #1e91ed;
+  background: -webkit-linear-gradient(to right, #ab4bde, #1e91ed);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #ab4bde, #1e91ed);
   font-family: Arial, Helvetica, sans-serif;
+}
+body::-webkit-scrollbar {
+  width: 5px;
+}
+body::-webkit-scrollbar-track {
+  background: lightgray;
+}
+body::-webkit-scrollbar-thumb {
+  background-color: #f3aacb;
+  border-radius: 8px;
 }
 ul {
   list-style: none;
-  padding: none;
-  margin: none;
+  padding: 0;
+  margin: 0;
 }
 span.resultado {
   position: relative;
